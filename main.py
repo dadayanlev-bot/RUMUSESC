@@ -105,6 +105,7 @@ def run_server():
     server.serve_forever()
 
 threading.Thread(target=run_server).start()
+
 import threading
 from http.server import HTTPServer, BaseHTTPRequestHandler
 
@@ -119,4 +120,5 @@ def run_server():
     server.serve_forever()
 
 threading.Thread(target=run_server).start()
+
 bot.infinity_polling()
