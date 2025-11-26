@@ -2,15 +2,14 @@
 # Простой Telegram-bot (pyTelegramBotAPI) для RUMUS.ESC — с реализацией RUMUS Биржи
 # pip install pyTelegramBotAPI
 
-import telebot
-from telebot import types
-
 import os
+import telebot
 
-TOKEN = os.getenv("TOKEN")  # Берём значение токена из переменной окружения
-ADMIN_ID = 123456789               # -- Твой Telegram ID (опционально уведомления админa)
-
+TOKEN = os.getenv("TOKEN")  
 bot = telebot.TeleBot(TOKEN)
+
+bot.polliing()
+ADMIN_ID = 123456789               # -- Твой Telegram ID (опционально уведомления админa)
 
 # В памяти
 users = {}         # {tg_id {role modelmanagerclient, verified False, ...}}
