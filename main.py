@@ -1,64 +1,65 @@
 import telebot
 import os
+from telebot import types
 
 TOKEN = os.getenv("TOKEN")
 bot = telebot.TeleBot(TOKEN)
 
 # -----------------------------
-#  ГЛАВНОЕ МЕНЮ С КНОПКАМИ
+#  Главное меню — выбор роли
 # -----------------------------
 @bot.message_handler(commands=['start'])
 def start(message):
-    # Создаем клавиатуру
-    markup = telebot.types.ReplyKeyboardMarkup(resize_keyboard=True)
-    # Кнопки на клавиатуре
-    markup.add("👩 Модель", "👨‍💼 Менеджер", "🧔 Клиент")
+    user_id = message.chat.id
+
+    # Используем ReplyKeyboardMarkup для больших кнопок-квадратов
+    markup = types.ReplyKeyboardMarkup(row_width=1, resize_keyboard=True)
+    btn_model = types.KeyboardButton("👩 Модель")
+    btn_manager = types.KeyboardButton("👨‍💼 Менеджер")
+    btn_client = types.KeyboardButton("🧔 Клиент")
+    markup.add(btn_model, btn_manager, btn_client)
+
     bot.send_message(
-        message.chat.id,
+        user_id,
         "Добро пожаловать в RUMUS BOT.\nВыберите кто вы:",
         reply_markup=markup
     )
 
 # -----------------------------
-#  ВЫБОР РОЛИ
+#  Обработка выбора роли
 # -----------------------------
 @bot.message_handler(func=lambda m: m.text in ["👩 Модель", "👨‍💼 Менеджер", "🧔 Клиент"])
 def select_role(message):
+    user_id = message.chat.id
     role = message.text
 
     if role == "👩 Модель":
         bot.send_message(
-            message.chat.id,
+            user_id,
             "🔍 Для моделей требуется верификация.\n"
-            "Запишите видео-кружок, где вы произносите:\n\n"
-            "**RUMUS.ESC**\n\n"
-            "После отправьте видео сюда."
+            "Запишите видео-кружок, где произносите:\n**RUMUS.ESC**\nПосле отправьте сюда."
         )
         bot.register_next_step_handler(message, model_verification)
 
     elif role == "👨‍💼 Менеджер":
-        bot.send_message(
-            message.chat.id,
-            "⚠️ Верификация менеджера.\nВыберите способ подтверждения:"
-        )
-        send_manager_verification(message.chat.id)
+        send_manager_verification(user_id)
 
     elif role == "🧔 Клиент":
         bot.send_message(
-            message.chat.id,
+            user_id,
             "Добро пожаловать, клиент.\nВерификация не требуется."
         )
 
 # -----------------------------
-#  ВЕРИФИКАЦИЯ МЕНЕДЖЕРА
+# Верификация менеджера (блоки)
 # -----------------------------
 def send_manager_verification(user_id):
-    markup = telebot.types.ReplyKeyboardMarkup(resize_keyboard=True)
+    markup = types.ReplyKeyboardMarkup(row_width=1, resize_keyboard=True)
     markup.add(
-        "🔗 Реферальный менеджер",
-        "💬 Отзывы от моделей",
-        "📨 Отзывы от клиентов",
-        "↩️ Назад"
+        types.KeyboardButton("🔗 Реферальный менеджер"),
+        types.KeyboardButton("💬 Отзывы от моделей"),
+        types.KeyboardButton("📨 Отзывы от клиентов"),
+        types.KeyboardButton("↩️ Назад")
     )
     bot.send_message(user_id, "Выберите способ верификации:", reply_markup=markup)
 
@@ -80,23 +81,24 @@ def manager_verification(message):
     )
 
 # -----------------------------
-#  ВЕРИФИКАЦИЯ МОДЕЛИ
+# Верификация модели (видео кружок)
 # -----------------------------
 def model_verification(message):
     if not message.video_note:
         bot.send_message(message.chat.id, "Это не видео-кружок. Попробуйте снова.")
-        return bot.register_next_step_handler(message, model_verification)
-
-    bot.send_message(
-        message.chat.id,
-        "Спасибо! Видео отправлено на ручную верификацию.\n"
-        "Вы получите ответ после проверки администрацией RUMUS."
-    )
+        bot.register_next_step_handler(message, model_verification)
+    else:
+        bot.send_message(
+            message.chat.id,
+            "Спасибо! Видео отправлено на ручную верификацию.\n"
+            "Вы получите ответ после проверки администрацией RUMUS."
+        )
 
 # -----------------------------
-#  ЗАПУСК БОТА
+# Запуск бота
 # -----------------------------
 print("Bot started!")
+
 import threading
 from http.server import BaseHTTPRequestHandler, HTTPServer
 
