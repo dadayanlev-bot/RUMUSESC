@@ -8,7 +8,7 @@ from telebot import types
 TOKEN = os.getenv(8497594070:AAHdh5pdWSJ_Pr4Zjmc0P3zdPA4wIUG2R9A)   # -- Поменяй на токен от BotFather
 ADMIN_ID = 123456789               # -- Твой Telegram ID (опционально уведомления админa)
 
-bot = telebot.TeleBot(TOKEN)
+bot = telebot.TeleBot(8497594070:AAHdh5pdWSJ_Pr4Zjmc0P3zdPA4wIUG2R9A)
 
 # В памяти
 users = {}         # {tg_id {role modelmanagerclient, verified False, ...}}
