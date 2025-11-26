@@ -5,7 +5,9 @@
 import telebot
 from telebot import types
 
-TOKEN = 8497594070:AAHdh5pdWSJ_Pr4Zjmc0P3zdPA4wIUG2R9A  # -- Поменяй на токен от BotFather
+import os
+
+TOKEN = os.getenv("TOKEN")  # Берём значение токена из переменной окружения
 ADMIN_ID = 123456789               # -- Твой Telegram ID (опционально уведомления админa)
 
 bot = telebot.TeleBot(TOKEN)
