@@ -222,7 +222,8 @@ def show_exchange(message):
     text = "📋 Биржа заказов:\n"
     for oid, odata in orders.items():
         if odata["status"] == "open":
-            text += (f"Номер {oid}: {odata['params']['city']}, {odata['params']['datetime']}, "f"Сумма: {odata['params']['total_sum']}, Модель получает: {odata['params']['model_sum']}\n")
+            text += (f"Номер {oid}: {odata['params']['city']}, {odata['params']['datetime']}, "
+                     f"Сумма: {odata['params']['total_sum']}, Модель получает: {odata['params']['model_sum']}\n")
     bot.send_message(user_id, text if text != "📋 Биржа заказов:\n" else "Нет открытых заказов.")
 
 # -----------------------------
